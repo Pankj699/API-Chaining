@@ -1,0 +1,199 @@
+----------------------POST REQUEST-----------------------------
+URL: https://reqres.in/api/users
+Pre-Request Script
+// Create Local variable
+pm.variables.set("local_url", "https://reqres.in/api")
+
+Test Script
+// Fetch the response from the body and set response in env variable
+var jsonData = pm.response.json();
+pm.environment.set("user_id", jsonData.id);
+
+
+--Body
+the data you needed to submit
+{
+    "id": 10,
+    "name": "jhon",
+    "email": "jhon@gmail.com",
+    "location": "India",
+    "phone": 7232656985,
+    "course": [
+            "Python",
+            "Selenium"
+        ]
+}
+
+
+
+----------------------GET REQUEST-----------------------------
+URL: https://reqres.in/api/users/{{user_id}}
+
+--Pre-Request Script
+// Create Local variable
+pm.variables.set("local_url", "https://reqres.in/api");
+
+// Create Global Variable
+pm.globals.set("uid2", "2");
+
+// Create Env Variable
+pm.environment.set("env_uid2", "2");
+
+//Create collection variable
+pm.collectionVariables.set("collection_uid2", "2");
+
+
+------------------------------TEST Script------------------------------
+// Check if the response status is 200
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+// Check if the response has a JSON Content-Type header
+pm.test("Content-Type is application/json", function () {
+    pm.response.to.have.header("Content-Type", "application/json; charset=utf-8");
+});
+
+// Validate that the response body has the user ID
+pm.test("Response body contains user ID", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.data.id).to.eql(parseInt(pm.environment.get("user_id")));
+});
+
+// Check that the response body has a name field
+pm.test("Response body contains name field", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.data).to.have.property("first_name");
+});
+
+// Ensure the response time is less than 200ms
+pm.test("Response time is less than 200ms", function () {
+    pm.expect(pm.response.responseTime).to.be.below(200);
+});
+
+// Validate that the response body is not empty
+pm.test("Response body is not empty", function () {
+    pm.expect(pm.response.text()).to.not.be.empty;
+});
+
+
+
+----------------------PUT REQUEST-----------------------------
+URL: https://reqres.in/api/users/{{user_id}}
+
+----------------------Test Script----------------------
+// Check the response time 
+pm.test("Check the response time below 200ms", () => {
+    pm.expect(pm.response.responseTime).to.be.below(200);
+});
+
+// To check whether the status code is correct or not
+pm.test("Check the status code 200 for updated data", () => {
+    pm.response.to.have.status(200);
+});
+
+// Check for the multiple responses
+pm.test("Check the response is one of these", () => {
+    pm.expect(pm.response.code).to.be.oneOf([200, "OK"]);
+});
+
+// Check header type
+pm.test("Check header has content-type", () => {
+    pm.response.to.have.header("Content-Type");
+});
+
+// Check header type and its value
+pm.test("Check the header has application/json Content-Type", () => {
+    pm.expect(pm.response.headers.get("Content-Type")).to.eql("application/json; charset=utf-8");
+});
+
+// Validate that the response body contains the updated name
+pm.test("Response body contains updated name", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.name).to.eql("Suraj");
+});
+
+// Ensure the response body contains the updated email
+pm.test("Response body contains updated email", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.email).to.eql("suraj@gmail.com");
+});
+
+// Check that the response body contains the updated location
+pm.test("Response body contains updated location", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.location).to.eql("India");
+});
+
+// Validate that the response body contains the updated phone number
+pm.test("Response body contains updated phone number", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.phone).to.eql(7232656985);
+});
+
+// Ensure that the response body contains the updated courses
+pm.test("Response body contains updated courses", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.course).to.include.members(["Python", "Selenium"]);
+});
+
+
+
+
+--BODY 
+//The field which i want to update
+{
+    "id": 10,
+    "name": "Suraj",
+    "email": "suraj@gmail.com",
+    "location": "India",
+    "phone": 7232656985,
+    "course": [
+            "Python",
+            "Selenium"
+        ]
+}
+
+
+----------------------DELETE REQUEST-----------------------------
+// Check the delete status response "(204) No Content"
+pm.test("Check No Content response", () => {
+    pm.response.to.have.status(204);
+});
+
+// Check the response time 
+pm.test("Check the response time below 200ms", () => {
+    pm.expect(pm.response.responseTime).to.be.below(200);
+});
+
+// Ensure the response body is empty
+pm.test("Response body is empty", () => {
+    pm.expect(pm.response.text()).to.be.empty;
+});
+
+// Check that the response does not have a JSON Content-Type header
+pm.test("Content-Type header is not present", () => {
+    pm.expect(pm.response.headers.has("Content-Type")).to.be.false;
+});
+
+// Validate the response size is zero
+pm.test("Response size is zero", () => {
+    pm.expect(pm.response.size().total).to.eql(0);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
